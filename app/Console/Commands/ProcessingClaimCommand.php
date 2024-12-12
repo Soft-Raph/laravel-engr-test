@@ -31,12 +31,13 @@ class ProcessingClaimCommand extends Command
     public function handle()
     {
         $insurerClaims = Claim::query()
+            ->with('insurer')
             ->where('processed', 0)
             ->where('status', 'pending')
             ->whereDate('processed_date', Carbon::today())
             ->orderBy('created_at')
-            ->get()
-            ->groupBy('insurer_code');
+            ->groupBy('insurer_code')
+            ->get();
 
         foreach ($insurerClaims as $insurerCode => $claims) {
             $insurer = Insurer::where('code', $insurerCode)->first();
