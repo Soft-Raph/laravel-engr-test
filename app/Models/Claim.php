@@ -32,7 +32,7 @@ class Claim extends Model
 
     public function insurer()
     {
-        return $this->belongsTo(Insurer::class);
+        return $this->belongsTo(Insurer::class, 'insurer_code', 'code');
     }
 
     public function items()

@@ -36,11 +36,14 @@ class ProcessingClaimCommand extends Command
             ->where('status', 'pending')
             ->whereDate('processed_date', Carbon::today())
             ->orderBy('created_at')
-            ->groupBy('insurer_code')
-            ->get();
+            ->get()
+            ->groupBy('insurer_code');
 
         foreach ($insurerClaims as $insurerCode => $claims) {
             $insurer = Insurer::where('code', $insurerCode)->first();
+            if (!$insurer){
+                continue;
+            }
             $minBatchSize = $insurer->min_batch_size;
             $maxBatchSize = $insurer->max_batch_size;
 
